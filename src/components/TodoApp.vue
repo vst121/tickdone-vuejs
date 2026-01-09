@@ -65,6 +65,10 @@ const formatDate = (dateStr: string | null) => {
       Loading tasks...
     </div>
 
+    <div v-if="filteredTodos.length === 0" class="empty-state">
+      No todos yet!
+    </div>
+
     <div v-else class="todo-list">
       <div
         v-for="todo in filteredTodos"
@@ -98,25 +102,31 @@ const formatDate = (dateStr: string | null) => {
       </div>
     </div>
 
-    <div v-if="filteredTodos.length === 0" class="empty-state">
-      No todos yet!
+    <div class="footer">
+      <span>
+        {{ filteredTodos.length }} item{{ filteredTodos.length !== 1 ? 's' : '' }} left.
+      </span>
+      <div class="filters">
+        <button
+          @click="filter = 'all'"
+          :class="{ active: filter === 'all' }"
+        >
+          All
+        </button>
+        <button
+          @click="filter = 'active'"
+          :class="{ active: filter === 'active' }"
+        >
+          Active
+        </button>
+        <button
+          @click="filter = 'completed'"
+          :class="{ active: filter === 'completed' }"
+        >
+          Completed
+        </button>
+      </div>
     </div>
-
-    <div class="filters">
-      <button
-        v-for="f in ['all', 'active', 'completed']"
-        :key="f"
-        @click="filter = f as any"
-        :class="{ active: filter === f }"
-        class="filter-btn"
-      >
-        {{ f.charAt(0).toUpperCase() + f.slice(1) }}
-      </button>
-    </div>
-
-    <footer class="todo-footer">
-      <span>{{ itemsLeft }} items left</span>
-    </footer>
 
     <Teleport to="body">
       <div v-if="deleteId !== null" class="confirm-dialog-overlay">

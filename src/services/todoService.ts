@@ -6,11 +6,6 @@ const getUrl = (path: string) => {
   return `${baseUrl}/${path.replace(/^\//, '')}`
 }
 
-// Local storage fallback for when the API is not available
-const STORAGE_KEY = 'tickdone_todos_mock'
-const getLocalTodos = (): Todo[] => JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-const saveLocalTodos = (todos: Todo[]) => localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-
 export const todoService = {
   async getTodos(): Promise<Todo[]> {
     const response = await fetch(getUrl('todos'))
