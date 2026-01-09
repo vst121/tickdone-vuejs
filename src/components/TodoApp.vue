@@ -43,101 +43,107 @@ const formatDate = (dateStr: string | null) => {
 
 <template>
   <div class="todo-container">
-    <div class="todo-card">
-      <header class="todo-header">
-        <h1>Todos</h1>
-        <p class="subtitle">Focus on your productivity</p>
-      </header>
+    <h1>Todos</h1>
 
-      <form @submit.prevent="handleSubmit" class="todo-form">
-        <div class="input-group">
-          <input
-            v-model="taskName"
-            type="text"
-            placeholder="What needs to be done?"
-            required
-            class="task-input"
-          />
-          <input
-            v-model="deadline"
-            type="datetime-local"
-            class="deadline-input"
-          />
-          <button type="submit" class="add-button">
-            <span class="icon">+</span>
-          </button>
-        </div>
-      </form>
+    <div v-if="error" class="error">{{ error }}</div>
 
-      <div class="filters">
-        <button
-          v-for="f in ['all', 'active', 'completed']"
-          :key="f"
-          @click="filter = f as any"
-          :class="{ active: filter === f }"
-          class="filter-btn"
-        >
-          {{ f.charAt(0).toUpperCase() + f.slice(1) }}
+    <form @submit.prevent="handleSubmit" class="todo-form">
+      <div class="input-group">
+        <input
+          v-model="taskName"
+          type="text"
+          placeholder="What needs to be done?"
+          required
+          class="task-input"
+        />
+        <input
+          v-model="deadline"
+          type="datetime-local"
+          class="deadline-input"
+        />
+        <button type="submit" class="add-button">
+          <span class="icon">+</span>
         </button>
       </div>
+    </form>
 
-      <div v-if="loading" class="status-msg">
-        <div class="spinner"></div>
-        Loading tasks...
-      </div>
-
-      <div v-else-if="error" class="status-msg error">
-        {{ error }}
-      </div>
-
-      <div v-else class="todo-list">
-        <TransitionGroup name="list">
-          <div
-            v-for="todo in filteredTodos"
-            :key="todo.id"
-            class="todo-item"
-            :class="{ done: todo.done, overdue: isOverdue(todo) }"
-          >
-            <div class="todo-content">
-              <label class="checkbox-container">
-                <input
-                  type="checkbox"
-                  :checked="todo.done"
-                  @change="toggleDone(todo.id)"
-                />
-                <span class="checkmark"></span>
-              </label>
-              
-              <div class="todo-details">
-                <span class="task-name">{{ todo.taskName }}</span>
-                <span v-if="todo.deadline" class="task-deadline">
-                  {{ isOverdue(todo) ? 'Overdue: ' : '' }}{{ formatDate(todo.deadline) }}
-                </span>
-              </div>
-            </div>
-
-            <button @click="deleteId = todo.id" class="delete-btn" title="Delete task">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-            </button>
-          </div>
-        </TransitionGroup>
-
-        <div v-if="filteredTodos.length === 0" class="empty-state">
-          No tasks found.
-        </div>
-      </div>
-
-      <footer class="todo-footer">
-        <span>{{ itemsLeft }} items left</span>
-      </footer>
+    <div class="filters">
+      <button
+        v-for="f in ['all', 'active', 'completed']"
+        :key="f"
+        @click="filter = f as any"
+        :class="{ active: filter === f }"
+        class="filter-btn"
+      >
+        {{ f.charAt(0).toUpperCase() + f.slice(1) }}
+      </button>
     </div>
+
+    <div v-if="loading" class="loading">
+      Loading tasks...
+    </div>
+
+    <div v-else class="todo-list">
+      <TransitionGroup name="list">
+        <div
+          v-for="todo in filteredTodos"
+          :key="todo.id"
+          class="todo-item"
+          :class="{ done: todo.done, overdue: isOverdue(todo) }"
+        >
+          <div class="todo-content">
+            <label class="checkbox-container">
+              <input
+                type="checkbox"
+                :checked="todo.done"
+                @change="toggleDone(todo.id)"
+              />
+              <span class="checkmark"></span>
+            </label>
+
+            <div class="todo-details">
+              <span class="task-name">{{ todo.taskName }}</span>
+              <span v-if="todo.deadline" class="task-deadline">
+                {{ isOverdue(todo) ? 'Overdue: ' : '' }}{{ formatDate(todo.deadline) }}
+              </span>
+            </div>
+          </div>
+
+          <button @click="deleteId = todo.id" class="delete-btn" title="Delete task">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </button>
+        </div>
+      </TransitionGroup>
+
+      <div v-if="filteredTodos.length === 0" class="empty-state">
+        No tasks found.
+      </div>
+    </div>
+
+    <footer class="todo-footer">
+      <span>{{ itemsLeft }} items left</span>
+    </footer>
 
     <!-- Deletion Modal -->
     <Teleport to="body">
       <div v-if="deleteId !== null" class="modal-overlay">
         <div class="modal-content">
-          <h3>Delete Task?</h3>
-          <p>Are you sure you want to remove this task? This action cannot be undone.</p>
+          <h3>Delete Todo</h3>
+          <p>Are you sure you want to delete this todo?</p>
           <div class="modal-actions">
             <button @click="deleteId = null" class="btn-cancel">Cancel</button>
             <button @click="confirmDelete" class="btn-delete">Delete</button>
@@ -149,383 +155,445 @@ const formatDate = (dateStr: string | null) => {
 </template>
 
 <style scoped>
-.todo-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: 'Outfit', sans-serif;
-}
-
-.todo-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.todo-header {
-  padding: 2.5rem 2rem 1.5rem;
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
   text-align: center;
-  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  margin-bottom: 2rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.025em;
+}
+
+button {
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  background: var(--primary-gradient);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--sky-blue);
+  outline-offset: 2px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: var(--text-light);
+  transition: var(--transition);
+}
+
+input[type="datetime-local"] {
   color: white;
 }
 
-.todo-header h1 {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -1px;
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* make icon white */
 }
 
-.subtitle {
-  margin: 0.5rem 0 0;
-  opacity: 0.9;
-  font-size: 1rem;
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--sky-blue);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.todo-container {
+  max-width: 800px;
+  width: 100%;
+  background: rgb(1, 0, 43);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .todo-form {
-  padding: 2rem;
-  border-bottom: 1px solid #f1f5f9;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: end;
 }
 
-.input-group {
-  display: flex;
-  gap: 0.75rem;
-  background: #f8fafc;
-  padding: 0.5rem;
-  border-radius: 16px;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
+.todo-form input[type="text"] {
+  grid-column: 1;
 }
 
-.input-group:focus-within {
-  border-color: #6366f1;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+.todo-form input[type="datetime-local"] {
+  grid-column: 2;
 }
 
-.task-input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  padding: 0.75rem;
-  font-size: 1rem;
-  outline: none;
-}
-
-.deadline-input {
-  border: none;
-  background: #f1f5f9;
-  padding: 0.5rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  color: #64748b;
-  outline: none;
-}
-
-.add-button {
-  background: #6366f1;
-  color: white;
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.add-button:hover {
-  background: #4f46e5;
-  transform: translateY(-2px);
-}
-
-.filters {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: #f8fafc;
-}
-
-.filter-btn {
-  border: none;
-  background: white;
-  padding: 0.5rem 1.25rem;
-  border-radius: 100px;
-  font-size: 0.9rem;
-  color: #64748b;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.filter-btn.active {
-  background: #6366f1;
-  color: white;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+.todo-form button {
+  grid-column: 3;
+  padding: 12px 20px;
 }
 
 .todo-list {
-  padding: 1rem;
-  min-height: 300px;
-  max-height: 500px;
-  overflow-y: auto;
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .todo-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-  background: white;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  border: 1px solid #f1f5f9;
-}
-
-.todo-item:hover {
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border-color: #e2e8f0;
-}
-
-.todo-content {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1;
-}
-
-.todo-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.task-name {
-  font-weight: 500;
-  color: #1e293b;
-  transition: all 0.3s;
-}
-
-.task-deadline {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-top: 0.25rem;
-}
-
-.todo-item.done .task-name {
-  text-decoration: line-through;
-  color: #cbd5e1;
-}
-
-.todo-item.overdue .task-deadline {
-  color: #ef4444;
-  font-weight: 600;
-}
-
-.todo-item.overdue {
-  border-left: 4px solid #ef4444;
-}
-
-/* Custom Checkbox */
-.checkbox-container {
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
+  overflow: hidden;
 }
 
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkmark {
+.todo-item::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
-  height: 24px;
+  right: 0;
+  height: 4px;
+  background: var(--accent-gradient);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.todo-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.todo-item:hover::before {
+  opacity: 1;
+}
+
+.todo-item.done {
+  opacity: 0.7;
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.todo-item.done::before {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  opacity: 1;
+}
+
+.todo-item.overdue {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.todo-item.overdue::before {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  opacity: 1;
+}
+
+.todo-checkbox {
   width: 24px;
-  background-color: #f1f5f9;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
-  transition: all 0.2s;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  flex-shrink: 0;
 }
 
-.checkbox-container:hover input ~ .checkmark {
-  background-color: #e2e8f0;
+.todo-checkbox:checked {
+  background: var(--accent-gradient);
+  border-color: transparent;
 }
 
-.checkbox-container input:checked ~ .checkmark {
-  background-color: #10b981;
-  border-color: #10b981;
-}
-
-.checkmark:after {
-  content: "";
+.todo-checkbox:checked::after {
+  content: '✓';
   position: absolute;
-  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
 }
 
-.checkbox-container input:checked ~ .checkmark:after {
-  display: block;
+.todo-content {
+  flex: 1;
+  min-width: 0;
 }
 
-.checkbox-container .checkmark:after {
-  left: 8px;
-  top: 4px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+.todo-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.todo-deadline {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.todo-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .delete-btn {
-  background: transparent;
-  border: none;
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 8px 12px;
   border-radius: 8px;
+  font-size: 0.9rem;
+  transition: var(--transition);
 }
 
 .delete-btn:hover {
-  color: #ef4444;
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+  transform: scale(1.05);
 }
 
-.status-msg {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 3rem;
-  color: #64748b;
-  gap: 1rem;
-}
-
-.status-msg.error {
-  color: #ef4444;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f1f5f9;
-  border-top: 4px solid #6366f1;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
 }
 
 .empty-state {
   text-align: center;
-  padding: 3rem;
-  color: #94a3b8;
-  font-style: italic;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
 }
 
-.todo-footer {
-  padding: 1.25rem 2rem;
-  background: #f8fafc;
-  border-top: 1px solid #f1f5f9;
+.footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: #64748b;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Animations */
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.4s ease;
-}
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+.footer span {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* Modal */
-.modal-overlay {
+.filters {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 4px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.filters button {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-shadow: none;
+}
+
+.filters button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.filters button.active {
+  background: var(--accent-gradient);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .todo-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .todo-form {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .todo-form input[type="datetime-local"] {
+    grid-column: 1;
+  }
+
+  .todo-form button {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .todo-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .todo-actions {
+    align-self: flex-end;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.confirm-dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
-.modal-content {
-  background: white;
+.confirm-dialog {
+  background: rgb(1, 0, 43);
+  border-radius: var(--border-radius);
   padding: 2rem;
-  border-radius: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   max-width: 400px;
   width: 90%;
   text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-.modal-content h3 {
-  margin: 0 0 1rem;
+.confirm-dialog h3 {
+  margin-top: 0;
+  color: var(--text-light);
   font-size: 1.5rem;
-  color: #1e293b;
+  font-weight: 700;
 }
 
-.modal-content p {
-  color: #64748b;
-  line-height: 1.6;
+.confirm-dialog p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
 }
 
-.modal-actions {
+.confirm-dialog-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  justify-content: center;
 }
 
-.btn-cancel {
-  flex: 1;
-  padding: 0.75rem;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background: white;
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  transition: var(--transition);
 }
 
-.btn-delete {
-  flex: 1;
-  padding: 0.75rem;
-  border-radius: 12px;
-  border: none;
-  background: #ef4444;
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.confirm-btn {
+  background: rgba(239, 68, 68, 0.8);
   color: white;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  transition: var(--transition);
 }
 
-.btn-delete:hover {
-  background: #dc2626;
+.confirm-btn:hover {
+  background: rgba(239, 68, 68, 1);
+}
+
+.logo {
+  width: 40px;
+  height: auto;
+  align-items: center;
+  margin: 0%;
 }
 </style>

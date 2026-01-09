@@ -2,7 +2,7 @@ import type { Todo } from '../types/todo'
 
 // Utility to handle URL construction without double slashes
 const getUrl = (path: string) => {
-  const baseUrl = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000').replace(/\/$/, '')
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
   return `${baseUrl}/${path.replace(/^\//, '')}`
 }
 
