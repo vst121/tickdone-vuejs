@@ -1,54 +1,74 @@
-# tickdone-vuejs
+# TickDone - Vue.js Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+**TickDone** is a premium, modern task management application built with **Vue 3** and **TypeScript**. This repository contains the frontend implementation, featuring a sleek user interface with real-time task management capabilities.
 
-## Recommended IDE Setup
+## ✨ Features
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Effortless Task Management**: Add, complete, and delete todos with a smooth, interactive UI.
+- **Deadline Tracking**: Set deadlines for tasks and get visual cues when they are overdue.
+- **Dynamic Filtering**: Quickly switch between 'All', 'Active', and 'Completed' views.
+- **Modern Aesthetics**: A glassmorphism-inspired design with vibrant gradients and responsive layouts.
+- **Robust Type Safety**: Fully implemented in TypeScript for better developer experience and fewer bugs.
 
-## Recommended Browser Setup
+## 🚀 Tech Stack
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- **Core**: [Vue 3](https://vuejs.org/) (Composition API with `<script setup>`)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **State & Logic**: Custom Composables for clean separation of concerns.
+- **Styling**: Vanilla CSS with modern CSS variables and transitions.
 
-## Type Support for `.vue` Imports in TS
+## 🏗️ Architecture
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+The project follows a clean, modular architecture:
 
-## Customize configuration
+- **`src/components/`**: UI components like `TodoApp.vue` which handles the layout and user interactions.
+- **`src/composables/`**: Business logic extracted into reusable functions (e.g., `useTodos.ts`).
+- **`src/services/`**: API abstraction layer (e.g., `todoService.ts`) handles all backend communication.
+- **`src/types/`**: Shared TypeScript interfaces and types.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 🛠️ Project Setup
 
-## Project Setup
+### Installation
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### Development
+
+Run the development server with hot-reload:
 
 ```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Type-Checking & Production Build
+
+Check for type errors and compile for production:
 
 ```sh
+npm run type-check
 npm run build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Linting & Formatting
 
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
+Clean up your code:
 
 ```sh
 npm run lint
+npm run format
 ```
+
+## 📝 Environment Variables
+
+Create a `.env` file in the root directory and specify your API base URL:
+
+```env
+VITE_API_BASE_URL=http://your-api-endpoint.com
+```
+
+---
+
+Developed with ❤️ as part of the **TickDone** ecosystem.
