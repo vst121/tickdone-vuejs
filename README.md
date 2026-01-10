@@ -8,6 +8,7 @@
 - **Deadline Tracking**: Set deadlines for tasks and get visual cues when they are overdue.
 - **Dynamic Filtering**: Quickly switch between 'All', 'Active', and 'Completed' views.
 - **Modern Aesthetics**: A glassmorphism-inspired design with vibrant gradients and responsive layouts.
+- **Comprehensive Testing**: Full-stack coverage with unit and component tests using Vitest and Vue Test Utils.
 - **Robust Type Safety**: Fully implemented in TypeScript for better developer experience and fewer bugs.
 
 ## 🚀 Tech Stack
@@ -15,6 +16,7 @@
 - **Core**: [Vue 3](https://vuejs.org/) (Composition API with `<script setup>`)
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Testing**: [Vitest](https://vitest.dev/) & [Vue Test Utils](https://test-utils.vuejs.org/)
 - **State & Logic**: Custom Composables for clean separation of concerns.
 - **Styling**: Vanilla CSS with modern CSS variables and transitions.
 
@@ -59,6 +61,31 @@ Clean up your code:
 ```sh
 npm run lint
 npm run format
+```
+
+## 🧪 Testing
+
+The project uses a tiered testing strategy to ensure reliability:
+
+- **Unit Tests**: Logic in `services` and `composables` are tested in isolation.
+- **Component Tests**: UI interactions in `TodoApp.vue` are verified using Vue Test Utils.
+
+To run all tests:
+
+```sh
+npm run test:unit
+```
+
+To run tests in watch mode (recommended for development):
+
+```sh
+npx vitest
+```
+
+To see a coverage report:
+
+```sh
+npx vitest --coverage
 ```
 
 ## 📝 Environment Variables
