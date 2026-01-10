@@ -1,0 +1,18 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mD:/VuejsProjects/tickdone-vuejs[39m
+
+ [31mΓ¥»[39m src/components/__tests__/TodoApp.spec.ts [2m([22m[2m8 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[32m 78[2mms[22m[39m
+[31m     [31m├ù[31m renders "No todos yet!" when list is empty[39m[32m 31[2mms[22m[39m
+[31m     [31m├ù[31m renders todos when they exist[39m[32m 4[2mms[22m[39m
+     [32mΓ£ô[39m calls loadTodos on mount[32m 4[2mms[22m[39m
+     [32mΓ£ô[39m submits a new todo when form is submitted[32m 13[2mms[22m[39m
+     [32mΓ£ô[39m shows loading state[32m 6[2mms[22m[39m
+     [32mΓ£ô[39m shows error message[32m 4[2mms[22m[39m
+[31m     [31m├ù[31m changes filter when filter buttons are clicked[39m[32m 7[2mms[22m[39m
+[31m     [31m├ù[31m opens delete confirmation dialog when delete button is clicked[39m[32m 7[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[2m | [22m[1m[32m4 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 22:13:48
+[2m   Duration [22m 1.13s[2m (transform 148ms, setup 0ms, import 317ms, tests 78ms, environment 550ms)[22m
+
