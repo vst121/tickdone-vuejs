@@ -84,10 +84,10 @@ describe('TodoApp.vue', () => {
     const buttons = wrapper.findAll('.filters button')
     
     // Find "Completed" button (index 2 based on template)
-    await buttons[2].trigger('click')
+    await buttons[2]!.trigger('click')
     expect(mockUseTodos.filter.value).toBe('completed')
     
-    await buttons[1].trigger('click')
+    await buttons[1]!.trigger('click')
     expect(mockUseTodos.filter.value).toBe('active')
   })
 

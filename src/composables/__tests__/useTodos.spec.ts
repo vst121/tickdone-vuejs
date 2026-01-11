@@ -52,7 +52,7 @@ describe('useTodos', () => {
     await toggleDone(1)
 
     expect(todoService.updateTodo).toHaveBeenCalledWith(1, updatedTodo)
-    expect(todos.value[0].done).toBe(true)
+    expect(todos.value[0]!.done).toBe(true)
   })
 
   it('confirmDelete should remove todo from list', async () => {
@@ -86,10 +86,10 @@ describe('useTodos', () => {
 
     filter.value = 'active'
     expect(filteredTodos.value).toHaveLength(1)
-    expect(filteredTodos.value[0].taskName).toBe('Active')
+    expect(filteredTodos.value[0]!.taskName).toBe('Active')
 
     filter.value = 'completed'
     expect(filteredTodos.value).toHaveLength(1)
-    expect(filteredTodos.value[0].taskName).toBe('Done')
+    expect(filteredTodos.value[0]!.taskName).toBe('Done')
   })
 })
