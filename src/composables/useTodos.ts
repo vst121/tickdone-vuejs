@@ -108,7 +108,7 @@ export function useTodos(): UseTodosReturn {
   })
 
   const itemsLeft = computed(() => {
-    return todos.value.filter(t => !t.done).length
+    return filteredTodos.value.length
   })
 
   return {
