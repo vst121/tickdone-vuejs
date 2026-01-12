@@ -1,8 +1,23 @@
-import { ref, computed } from 'vue'
+import { ref, computed, type Ref, type ComputedRef } from 'vue'
 import type { Todo, TodoFilter } from '../types/todo'
 import { todoService } from '../services/todoService'
 
-export function useTodos() {
+export interface UseTodosReturn {
+  todos: Ref<Todo[]>
+  loading: Ref<boolean>
+  error: Ref<string | null>
+  filter: Ref<TodoFilter>
+  deleteId: Ref<number | null>
+  filteredTodos: ComputedRef<Todo[]>
+  itemsLeft: ComputedRef<number>
+  loadTodos: () => Promise<void>
+  addTodo: (taskName: string, deadline: string | null) => Promise<void>
+  toggleDone: (id: number) => Promise<void>
+  confirmDelete: () => Promise<void>
+  isOverdue: (todo: Todo) => boolean
+}
+
+export function useTodos(): UseTodosReturn {
   const todos = ref<Todo[]>([])
   const loading = ref(true)
   const error = ref<string | null>(null)
@@ -16,7 +31,7 @@ export function useTodos() {
       todos.value = await todoService.getTodos()
     } catch (err) {
       console.error('Error fetching todos:', err)
-      error.value = 'An unexpected error occurred while fetching the todos.'
+      error.value = err instanceof Error ? err.message : 'An unexpected error occurred while fetching the todos.'
       todos.value = []
     } finally {
       loading.value = false
@@ -25,9 +40,13 @@ export function useTodos() {
 
   const addTodo = async (taskName: string, deadline: string | null) => {
     error.value = null
-    const newTodoData = {
+    const parsedDeadline = deadline && !isNaN(Date.parse(deadline)) 
+      ? new Date(deadline).toISOString() 
+      : null
+
+    const newTodoData: Partial<Todo> = {
       taskName: taskName.trim(),
-      deadline: deadline ? new Date(deadline).toISOString() : null,
+      deadline: parsedDeadline,
       done: false
     }
 
@@ -36,7 +55,7 @@ export function useTodos() {
       todos.value.push(createdTodo)
     } catch (err) {
       console.error('Error creating todo:', err)
-      error.value = 'An unexpected error occurred while creating the todo.'
+      error.value = err instanceof Error ? err.message : 'An unexpected error occurred while creating the todo.'
     }
   }
 
@@ -45,7 +64,7 @@ export function useTodos() {
     if (!todo) return
 
     error.value = null
-    const updatedTodo = { ...todo, done: !todo.done }
+    const updatedTodo: Todo = { ...todo, done: !todo.done }
 
     try {
       const result = await todoService.updateTodo(id, updatedTodo)
@@ -55,7 +74,7 @@ export function useTodos() {
       }
     } catch (err) {
       console.error('Error updating todo:', err)
-      error.value = 'Failed to update todo'
+      error.value = err instanceof Error ? err.message : 'Failed to update todo'
     }
   }
 
@@ -70,7 +89,7 @@ export function useTodos() {
       deleteId.value = null
     } catch (err) {
       console.error('Error deleting todo:', err)
-      error.value = 'Failed to delete todo'
+      error.value = err instanceof Error ? err.message : 'Failed to delete todo'
       deleteId.value = null
     }
   }

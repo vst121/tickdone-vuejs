@@ -25,13 +25,13 @@ onMounted(() => {
 
 const handleSubmit = async () => {
   if (!taskName.value.trim()) return
-  await addTodo(taskName.value, deadline.value)
+  await addTodo(taskName.value.trim(), deadline.value || null)
   taskName.value = ''
   deadline.value = ''
 }
 
-const formatDate = (dateStr: string | null) => {
-  if (!dateStr) return ''
+const formatDate = (dateStr: string | null): string => {
+  if (!dateStr || isNaN(Date.parse(dateStr))) return ''
   return new Date(dateStr).toLocaleDateString(undefined, {
     month: 'short',
     day: 'numeric',
@@ -104,7 +104,7 @@ const formatDate = (dateStr: string | null) => {
 
     <div class="footer">
       <span>
-        {{ filteredTodos.length }} item{{ filteredTodos.length !== 1 ? 's' : '' }} left.
+        {{ itemsLeft }} item{{ itemsLeft !== 1 ? 's' : '' }} left.
       </span>
       <div class="filters">
         <button
